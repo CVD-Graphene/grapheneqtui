@@ -1,6 +1,4 @@
 from PyQt5.QtWidgets import QTableWidgetItem, QComboBox
-
-from coregraphene.utils.actions import get_action_by_name
 from .cells import (
     TableItem, AppQSpinBox, AppQDoubleSpinBox, AppQTimeEdit,
 )
@@ -27,7 +25,7 @@ class TableRow(object):
 
         if items is not None and len(items) >= 5:
             items = list(map(lambda x: str(x).strip(), items))
-            action, i = get_action_by_name(items[0], self.actions_list)
+            action, i = self.get_action_by_name(items[0])
             # action: AppAction = action  # from coregraphene.auto_actions import AppAction
             if action is not None:
                 self.combo.setCurrentIndex(i)
@@ -97,6 +95,12 @@ class TableRow(object):
             self._set_default_table_items()
 
         self.combo.currentIndexChanged.connect(self._action_changed)
+
+    def get_action_by_name(self, name):
+        for i, action in enumerate(self.actions_list):
+            if action.name.strip() == name:
+                return action, i
+        return None, 0
 
     def _set_default_table_items(self):
         self.items = [
