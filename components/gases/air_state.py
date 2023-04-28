@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel
 
 from ...components import ButterflyButton
 from .styles import styles
+from ...constants import BUTTERFLY_BUTTON_STATE
 
 
 class AirStateWidget(QWidget):
@@ -39,7 +40,9 @@ class AirStateWidget(QWidget):
         self.layout.addWidget(self.b, stretch=4, alignment=QtCore.Qt.AlignHCenter,)
 
     def draw_is_open(self, is_open):
-        self.b.update_active(is_open)
+        state = BUTTERFLY_BUTTON_STATE.OPEN if is_open else BUTTERFLY_BUTTON_STATE.CLOSE
+        self.b.update_state_signal.emit(state)
+        # self.b.update_active(is_open)
 
     def connect_valve_function(self, func):
         def on_click():

@@ -63,10 +63,12 @@ class BaseValvesControlBlock(QWidget):
             self.gases.append(gas_attr)
 
     def draw_set_gas_target_sccm(self, sccm, gas_num):
-        self.gases[gas_num].draw_set_target_sccm(sccm)
+        # self.gases[gas_num].draw_set_target_sccm(sccm)
+        self.gases[gas_num].column_info.update_target_signal.emit(sccm)
 
     def draw_is_open_gas(self, is_open, gas_num):
-        self.gases[gas_num].draw_is_open(is_open)
+        # self.gases[gas_num].draw_is_open(is_open)
+        self.gases[gas_num].on_update_is_valve_open_signal.emit(is_open)
 
     def draw_is_open_air(self, is_open):
         self.air.draw_is_open(is_open)
