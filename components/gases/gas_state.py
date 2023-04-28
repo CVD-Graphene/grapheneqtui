@@ -13,6 +13,7 @@ class GasStateWidget(QWidget):
     update_target_sccm_signal = pyqtSignal(float, int)
     on_update_is_valve_open_signal = pyqtSignal(bool)
     update_is_valve_open_signal = pyqtSignal(int)
+    on_update_gas_name_color_by_pressure_signal = pyqtSignal(int)
 
     def __init__(self,
                  gas="O2",
@@ -103,6 +104,14 @@ class GasStateWidget(QWidget):
         self.column_info.on_update_target_signal.connect(self._on_update_target_sccm)
         self.on_update_is_valve_open_signal.connect(self._draw_is_open)
         self.b.clicked.connect(self._on_click_butterfly)
+
+        self.on_update_gas_name_color_by_pressure_signal.connect(self._draw_gas_name_color)
+
+    def _draw_gas_name_color(self, pressure=0.0):
+        if pressure < 1.5:
+            self.gas.update_text_color_signal.emit("#B00000")
+        else:
+            self.gas.update_text_color_signal.emit("#000000")
 
     def _on_update_target_sccm(self, sccm: float):
         self.update_target_sccm_signal.emit(sccm, self.number)
