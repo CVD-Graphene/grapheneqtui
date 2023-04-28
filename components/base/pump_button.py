@@ -1,33 +1,40 @@
-from PyQt5 import QtCore
-from PyQt5.QtWidgets import QPushButton, QHBoxLayout
+from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import QLabel
 
-button_style = """
-QPushButton#button_valve_control {
-    height: 90px;
-    width: 90px;
-    border-radius: 45px;
-    background-color: rgb(254, 100, 100);
-    border-style: solid;
-    border-width: 1px;
-    border-color: rgba(0,0,100,255);
-}
-QPushButton#button_valve_control:pressed {
-    background-color: rgb(155, 100, 100);
-}
-"""
+from ...constants import PUMP_BUTTON_STATE
 
 
-class PumpButton(QPushButton):
-    def __init__(self):
+class PumpButton(QLabel):
+    clicked = pyqtSignal()
+    update_state_signal = pyqtSignal(int)
+
+    def mousePressEvent(self, ev):
+        self.clicked.emit()
+
+    def __init__(self, state=PUMP_BUTTON_STATE.CLOSE):
         super().__init__()
-        self.layout = QHBoxLayout()
-        self.setLayout(self.layout)
-        self.setObjectName("button_valve_control")
-        self.setStyleSheet(button_style)
-        self.setAttribute(QtCore.Qt.WA_StyledBackground, True)
+        self._state = state
+        self.update_state_signal.connect(self._update_state)
 
-        # self.button = QPushButton()
-        # self.button.setObjectName("button_valve_control")
-        # self.button.setStyleSheet(button_style)
-        # self.w = ValveLines()
-        # self.layout.addWidget(self.w)
+        self.setObjectName("pump_button")
+
+        self._pictures = {
+            PUMP_BUTTON_STATE.INACTIVE: "grapheneqtui/assets/pump_button/gray_pump.png",
+            PUMP_BUTTON_STATE.OPEN: "grapheneqtui/assets/pump_button/green_pump.png",
+            PUMP_BUTTON_STATE.CLOSE: "grapheneqtui/assets/pump_button/red_pump.png",
+        }
+        self._update_state(self._state)
+
+    def _update_state(self, state):
+        self._state = state
+        self.update_ui()
+
+    def update_ui(self):
+        try:
+            pixmap = QPixmap(self._pictures.get(self._state))
+            self.setPixmap(pixmap)
+            # Optional, resize window to image size
+            self.resize(pixmap.width(), pixmap.height())
+        except Exception as e:
+            print("Show picture pump button error", e)

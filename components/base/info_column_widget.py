@@ -114,7 +114,7 @@ class InfoColumnWidget(QWidget):
         self.input.setText(f"{round(value, self.decimals)}")
 
     def _on_update_input_value(self):
-        input_value = self.input.text()
+        input_value = self.input.text().replace(',', '.')
         value = float(input_value)
-        print("! INPUT TARGET VALUE:", value)
+        # print("! INPUT TARGET VALUE:", value)
         self.on_update_target_signal.emit(value)
