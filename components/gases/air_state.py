@@ -1,4 +1,5 @@
 from PyQt5 import QtCore
+from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel
 
 from ...components import ButterflyButton
@@ -7,6 +8,9 @@ from ...constants import BUTTERFLY_BUTTON_STATE
 
 
 class AirStateWidget(QWidget):
+    on_update_is_valve_open_signal = pyqtSignal(bool)
+    update_is_valve_open_signal = pyqtSignal()
+
     def __init__(self):
         super().__init__()
 
@@ -39,15 +43,25 @@ class AirStateWidget(QWidget):
         self.layout.addWidget(self.label, stretch=1, alignment=QtCore.Qt.AlignCenter,)
         self.layout.addWidget(self.b, stretch=4, alignment=QtCore.Qt.AlignHCenter,)
 
-    def draw_is_open(self, is_open):
+        self.on_update_is_valve_open_signal.connect(self._draw_is_open)
+        self.b.clicked.connect(self._on_click_butterfly)
+
+    def _draw_is_open(self, is_open: bool):
         state = BUTTERFLY_BUTTON_STATE.OPEN if is_open else BUTTERFLY_BUTTON_STATE.CLOSE
         self.b.update_state_signal.emit(state)
-        # self.b.update_active(is_open)
 
-    def connect_valve_function(self, func):
-        def on_click():
-            ans = func()
-            if type(ans) in [bool, int]:
-                self.draw_is_open(ans)
+    def _on_click_butterfly(self):
+        self.update_is_valve_open_signal.emit()
 
-        self.b.clicked.connect(on_click)
+    # def draw_is_open(self, is_open):
+    #     state = BUTTERFLY_BUTTON_STATE.OPEN if is_open else BUTTERFLY_BUTTON_STATE.CLOSE
+    #     self.b.update_state_signal.emit(state)
+    #     # self.b.update_active(is_open)
+    #
+    # def connect_valve_function(self, func):
+    #     def on_click():
+    #         ans = func()
+    #         if type(ans) in [bool, int]:
+    #             self.draw_is_open(ans)
+    #
+    #     self.b.clicked.connect(on_click)

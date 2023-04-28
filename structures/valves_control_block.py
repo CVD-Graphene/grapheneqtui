@@ -71,4 +71,5 @@ class BaseValvesControlBlock(QWidget):
         self.gases[gas_num].on_update_is_valve_open_signal.emit(is_open)
 
     def draw_is_open_air(self, is_open):
-        self.air.draw_is_open(is_open)
+        # self.air.draw_is_open(is_open)
+        self.air.on_update_is_valve_open_signal.emit(is_open)

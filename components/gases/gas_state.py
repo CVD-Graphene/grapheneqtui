@@ -138,5 +138,5 @@ class GasStateWidget(QWidget):
     #     if self._on_system_change_sccm is not None:
     #         self._on_system_change_sccm(sccm, self.number)
 
-    def draw_set_target_sccm(self, sccm):
-        self.input.setText(str(sccm))
+    # def draw_set_target_sccm(self, sccm):
+    #     self.input.setText(str(sccm))
