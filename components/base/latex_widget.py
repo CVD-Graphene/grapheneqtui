@@ -1,3 +1,4 @@
+from PyQt5.QtCore import pyqtSignal
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -26,15 +27,19 @@ styles = StyleSheet({
 
 
 class LatexWidget(QtWidgets.QWidget):
+    update_text_color_signal = pyqtSignal(str)
 
     def __init__(self,
                  text="$F_2$",
                  parent=None,
                  rgb=None,
                  fon_size_mult=1.5,
+                 text_color="#000000",
                  top_y=0.9,
                  ):
         super().__init__(parent)
+        self.text_color = text_color
+        self.text = text
         if rgb is None:
             self.rgb = [200, 200, 200]
         else:
@@ -51,10 +56,19 @@ class LatexWidget(QtWidgets.QWidget):
         self._canvas = FigureCanvas(self._figure)
         # self._canvas.siz
         l.addWidget(self._canvas)
+        self._update_ui()
 
-        self._setText(text)
+        self.update_text_color_signal.connect(self._update_text_color)
+
+    def _update_text_color(self, text_color):
+        if text_color != self.text_color:
+            self.text_color = text_color
+            self._update_ui()
 
     def _setText(self, mathText):
+        if self.text != mathText:
+            self.text = mathText
+            self._update_ui()
         # self.setStyleSheet(styles.container)
         # l = QVBoxLayout(self)
         # l.setContentsMargins(0, 0, 0, 0)
@@ -67,13 +81,15 @@ class LatexWidget(QtWidgets.QWidget):
         # l.addWidget(self._canvas)
         # self._figure.clear()
 
+    def _update_ui(self):
         text = self._figure.suptitle(
-            mathText,
+            self.text,
             x=0.03,
             y=self.top_y,
             horizontalalignment='left',
             verticalalignment='top',
-            size=QtGui.QFont().pointSize() * self.fon_size_mult
+            size=QtGui.QFont().pointSize() * self.fon_size_mult,
+            color=self.text_color,
         )
         # self._canvas.draw()
 
