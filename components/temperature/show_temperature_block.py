@@ -20,21 +20,14 @@ styles = StyleSheet({
 })
 
 
-class ShowPressureBlock(ParameterLatexLabel):
-    update_pressure_signal = pyqtSignal(float)
+class ShowTemperatureBlock(ParameterLatexLabel):
+    update_temperature_signal = pyqtSignal(float)
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-        self.update_pressure_signal.connect(self.set_value)
-        self.set_value(0.0)
+        self.update_temperature_signal.connect(self._set_value)
+        self._set_value(0.0)
 
-        # shadow = QGraphicsDropShadowEffect()
-        # # setting blur radius
-        # shadow.setBlurRadius(SHADOW_BLUR_RADIUS)
-        # # adding shadow to the label
-        # self.setGraphicsEffect(shadow)
-
-    def set_value(self, value):
-        print("DEPRECATED Remove set_value from ShowPressureBlock!")
-        self.value = str(round(value, 1))
-        self.setText(f"P = ${value}$ mbar")
+    def _set_value(self, value):
+        value = str(round(value, 1))
+        self.setText(f"T = ${value}$ °C")

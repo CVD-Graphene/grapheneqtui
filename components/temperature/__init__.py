@@ -1,1 +1,2 @@
 from .temperature_termodat_block import TermodatTemperatureBlock
+from .show_temperature_block import ShowTemperatureBlock
