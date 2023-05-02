@@ -9,6 +9,8 @@ styles = StyleSheet({
         # "max-width": "240px",
         # "min-width": "180px",
         "background-color": "rgb(50, 50, 50)",
+        # "position": "absolute",
+        # "z-index": "100500",
     },
     "table_button": {
         "name": "QPushButton#table_button",
