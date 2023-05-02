@@ -151,7 +151,7 @@ class RecipeTableWidget(QWidget):
         horizontalHeader = self.table.horizontalHeader()
         # resize the first column to 100 pixels
         for i in range(4):
-            horizontalHeader.resizeSection(i, 180)
+            horizontalHeader.resizeSection(i, 195)
             horizontalHeader.setFont(custom_font)
         # adjust the second column to its contents
         # horizontalHeader.setSectionResizeMode(
