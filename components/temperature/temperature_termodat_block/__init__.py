@@ -63,7 +63,7 @@ class TermodatTemperatureBlock(QWidget):
         self.layout.addWidget(self.temperature_input, alignment=QtCore.Qt.AlignCenter)
         self.layout.addWidget(self.state_button, alignment=QtCore.Qt.AlignCenter)
 
-    def set_current_temperature(self, value):
+    def current_temperature_effect(self, value):
         # self.current_temperature.setText(f"T= {round(random.random() * 9)}: {value} °C")
         self.current_temperature.setText(f"T = {value} °C")
 

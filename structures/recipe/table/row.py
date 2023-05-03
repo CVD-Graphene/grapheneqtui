@@ -26,7 +26,7 @@ class TableRow(object):
         if items is not None and len(items) >= 5:
             items = list(map(lambda x: str(x).strip(), items))
             action, i = self.get_action_by_name(items[0])
-            # action: AppAction = action  # from coregraphene.auto_actions import AppAction
+            # action: AppAction = action  # from coregraphene.actions import AppAction
             if action is not None:
                 self.combo.setCurrentIndex(i)
                 self.items = [TableItem(self.combo)] + [
