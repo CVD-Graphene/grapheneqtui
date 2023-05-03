@@ -25,8 +25,8 @@ class ShowPressureBlock(ParameterLatexLabel):
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-        self.update_pressure_signal.connect(self.set_value)
-        self.set_value(0.0)
+        self.update_pressure_signal.connect(self._set_value)
+        self._set_value(0.0)
 
         # shadow = QGraphicsDropShadowEffect()
         # # setting blur radius
@@ -36,5 +36,8 @@ class ShowPressureBlock(ParameterLatexLabel):
 
     def set_value(self, value):
         print("DEPRECATED Remove set_value from ShowPressureBlock!")
+        self._set_value(value)
+
+    def _set_value(self, value):
         self.value = str(round(value, 1))
         self.setText(f"P = ${value}$ mbar")

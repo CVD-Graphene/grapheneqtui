@@ -1,6 +1,7 @@
 import datetime
 
 from PyQt5 import QtCore
+from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QHBoxLayout, QWidget, QMainWindow, QFileDialog
 
 from ..components import LogWidget
@@ -21,6 +22,8 @@ class BaseMainDialogWindow(QMainWindow):
     recipe_states_to_str = None
     recipe_table_column_names = None
     notifications_configuration = None
+
+    run_recipe_signal = pyqtSignal()
 
     def __init__(self, parent=None, system=None):
         super().__init__(parent=parent)
@@ -78,6 +81,8 @@ class BaseMainDialogWindow(QMainWindow):
         # print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
         # self.close()
 
+        self.run_recipe_signal.connect(self.run_recipe_ui)
+
     def system_connect(self):
         """
         Call this function before open full dialog window
@@ -125,7 +130,8 @@ class BaseMainDialogWindow(QMainWindow):
         pass
 
     def connect_recipes_actions(self):
-        self.system.set_current_recipe_step_action.connect(self.add_recipe_step)
+        self.system.current_recipe_step_effect.connect(self.add_recipe_step)
+        self.system.recipe_start_effect.connect(self.run_recipe_signal.emit)
 
     def on_create_recipe(self):
         try:
@@ -165,16 +171,21 @@ class BaseMainDialogWindow(QMainWindow):
             # ready = self.system.run_recipe(recipe)
             if not ready:
                 return
-            # self.system.start_recipe()
-            self.system.run_recipe()
-            self._recipe_history = []
-            self.add_recipe_step({'name': "Инициализация рецепта"})
-            self.table_widget.on_close()
-            self.milw.deactivate_interface()
-            self.right_buttons_layout_widget.activate_manage_recipe_buttons()
+            self.run_recipe()
         except Exception as e:
             self.system.add_error("Start recipe UI error:" + str(e))
             print("Start recipe UI error:", e)
+
+    def run_recipe(self):
+        self.system.run_recipe()
+        # self.run_recipe_ui()
+
+    def run_recipe_ui(self):
+        self._recipe_history = []
+        self.add_recipe_step({'name': "Инициализация рецепта"})
+        self.table_widget.on_close()
+        self.milw.deactivate_interface()
+        self.right_buttons_layout_widget.activate_manage_recipe_buttons()
 
     def add_recipe_step(self, step: dict):  # name="---", index=None):
         name = step.get('name', '-----')
