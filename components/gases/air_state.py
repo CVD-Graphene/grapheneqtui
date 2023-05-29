@@ -1,5 +1,5 @@
 from PyQt5 import QtCore
-from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import pyqtSignal, QTimer
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel
 
 from ...components import ButterflyButton
@@ -10,9 +10,14 @@ from ...constants import BUTTERFLY_BUTTON_STATE
 class AirStateWidget(QWidget):
     on_update_is_valve_open_signal = pyqtSignal(bool)
     update_is_valve_open_signal = pyqtSignal()
+    confirmation_press_time_ms = 5000
 
     def __init__(self):
         super().__init__()
+
+        self.is_waiting = False
+        self.state = BUTTERFLY_BUTTON_STATE.CLOSE
+        self.timer = QTimer(parent=None)
 
         self.line = QWidget(self)
         self.line.setStyleSheet(styles.line)
@@ -47,11 +52,26 @@ class AirStateWidget(QWidget):
         self.b.clicked.connect(self._on_click_butterfly)
 
     def _draw_is_open(self, is_open: bool):
-        state = BUTTERFLY_BUTTON_STATE.OPEN if is_open else BUTTERFLY_BUTTON_STATE.CLOSE
-        self.b.update_state_signal.emit(state)
+        self.is_waiting = False
+        self.state = BUTTERFLY_BUTTON_STATE.OPEN if is_open else BUTTERFLY_BUTTON_STATE.CLOSE
+        self.b.update_state_signal.emit(self.state)
 
     def _on_click_butterfly(self):
-        self.update_is_valve_open_signal.emit()
+        if self.is_waiting or self.state == BUTTERFLY_BUTTON_STATE.OPEN:
+            self.is_waiting = False
+            self.update_is_valve_open_signal.emit()
+        else:
+            self.is_waiting = True
+            self.b.update_state_signal.emit(BUTTERFLY_BUTTON_STATE.REGULATION)
+            self.timer.singleShot(
+                self.confirmation_press_time_ms,
+                self._clear_button_waiting
+            )
+
+    def _clear_button_waiting(self):
+        if not self.is_waiting:
+            return
+        self._draw_is_open(False)
 
     # def draw_is_open(self, is_open):
     #     state = BUTTERFLY_BUTTON_STATE.OPEN if is_open else BUTTERFLY_BUTTON_STATE.CLOSE
