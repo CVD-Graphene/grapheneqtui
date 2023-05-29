@@ -2,6 +2,8 @@ from PyQt5 import QtCore
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtGui import QDoubleValidator
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QHBoxLayout, QLabel
+
+from .latex_widget import LatexWidget
 from ...utils import StyleSheet
 
 styles = StyleSheet({
@@ -49,6 +51,7 @@ class InfoColumnWidget(QWidget):
     update_current_signal = pyqtSignal(float)
     update_target_signal = pyqtSignal(float)
     on_update_target_signal = pyqtSignal(float)
+    down_latex_fon_size_mult = 1.3
 
     def __init__(self,
                  max_value=200.0,
@@ -86,10 +89,13 @@ class InfoColumnWidget(QWidget):
         self.up_widget.addWidget(self.input, stretch=1, alignment=QtCore.Qt.AlignLeft)
         self.up_widget.addWidget(self.up_label, stretch=1, alignment=QtCore.Qt.AlignRight)
 
-        self.down_label = QLabel()
+        # self.down_label = QLabel()
+        self.down_label = LatexWidget(
+            fon_size_mult=self.down_latex_fon_size_mult,
+        )
         self.down_label.setText(f"{self.min_value} {self.unit}")
         self.down_label.setStyleSheet(styles.down_label)
-        self.down_label.setAlignment(QtCore.Qt.AlignCenter)
+        # self.down_label.setAlignment(QtCore.Qt.AlignCenter)
 
         # self.info_layout_widget = QWidget()
         # self.info_layout_widget.setStyleSheet("background-color: #000000;max-height: 200px;")
@@ -108,7 +114,10 @@ class InfoColumnWidget(QWidget):
 
     def _update_current_value_label(self, value: float):
         # print("NEW VALUE CURRENT SCCM DRAW:", value)
-        self.down_label.setText(f"{round(value, self.decimals)} {self.unit}")
+        self.down_label.setText(self.get_label_text_format(value))
+
+    def get_label_text_format(self, value: float):
+        return f"${round(value, self.decimals)}$ {self.unit}"
 
     def _update_target_value_label(self, value: float):
         self.input.setText(f"{round(value, self.decimals)}")
