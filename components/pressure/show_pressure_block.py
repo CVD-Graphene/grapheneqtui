@@ -39,5 +39,9 @@ class ShowPressureBlock(ParameterLatexLabel):
         self._set_value(value)
 
     def _set_value(self, value):
-        self.value = str(round(value, 1))
-        self.setText(f"P = ${value}$ mbar")
+        self.value = value
+        s = "{:.1E}".format(value).lower()
+        num, degree = s.split('e')
+        formatted_value = f"{num}*10^{{{int(degree)}}}"
+        # self.value = str(round(value, 1))
+        self.setText(f"P = ${formatted_value}$ mbar")
