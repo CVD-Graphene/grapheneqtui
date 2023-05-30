@@ -1,5 +1,5 @@
 from PyQt5 import QtCore
-from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import pyqtSignal, QTimer
 from PyQt5.QtGui import QDoubleValidator
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QHBoxLayout, QLabel
 
@@ -28,12 +28,12 @@ class GasStateWidget(QWidget):
         self._on_system_change_sccm = None
         self.unit = unit
 
-        self.line = QWidget(self)
-        self.line.setStyleSheet(styles.line)
-        self.line.setFixedWidth(self.width() - 120)
-        # print("HEIGHT!!!", self.height() // 2) # 240 = h/2 ????
-        self.line.move(120, 60)  # -self.height() // 2
-        # self.layout.addWidget(self.line, QtCore.Qt.AlignAbsolute)
+        # LINE !
+        # self.line = QWidget(self)
+        # self.line.setStyleSheet(styles.line)
+        # self.line.setFixedWidth(self.width() - 120)
+        # # print("HEIGHT!!!", self.height() // 2) # 240 = h/2 ????
+        # self.line.move(120, 60)  # -self.height() // 2
 
         self.layout = QHBoxLayout()
         self.setLayout(self.layout)
@@ -50,7 +50,7 @@ class GasStateWidget(QWidget):
         self.gas = LatexWidget(
             text=f"${gas}$",
             rgb=[240, 240, 240],
-            fon_size_mult=3.4
+            fon_size_mult=2.0
         )
         # self.gas.setText(gas)
         self.gas.setStyleSheet(styles.gas)
@@ -96,9 +96,10 @@ class GasStateWidget(QWidget):
         # self.layout.setSpacing(0)
 
         self.layout.addWidget(self.gas, stretch=1, alignment=QtCore.Qt.AlignLeft)
-        # self.layout.addStretch(10)
+        # self.layout.addStretch(100)
+        self.layout.addSpacing(50)
         # self.layout.addWidget(self.info_layout_widget, stretch=1, alignment=QtCore.Qt.AlignCenter,)
-        self.layout.addWidget(self.column_info, stretch=1, alignment=QtCore.Qt.AlignCenter,)
+        self.layout.addWidget(self.column_info, stretch=10, alignment=QtCore.Qt.AlignCenter,)
         self.layout.addWidget(self.b, stretch=10, alignment=QtCore.Qt.AlignHCenter,)
 
         self.column_info.on_update_target_signal.connect(self._on_update_target_sccm)
@@ -106,6 +107,9 @@ class GasStateWidget(QWidget):
         self.b.clicked.connect(self._on_click_butterfly)
 
         self.on_update_gas_name_color_by_pressure_signal.connect(self._draw_gas_name_color)
+
+        self.tmp_timer = QTimer(parent=None)
+        self.tmp_timer.singleShot(100, self._draw_gas_name_color)
 
     def _draw_gas_name_color(self, pressure=0.0):
         if pressure < 1.5:

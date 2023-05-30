@@ -18,8 +18,8 @@ styles = StyleSheet({
         "max-height": GAS_HEIGHT,
         "min-height": GAS_HEIGHT,
         "height": GAS_HEIGHT,
-        "min-width": "80px",
-        "font-size": "48px",
+        # "min-width": "60px",
+        "font-size": "32px",
         "font-weight": "bold",
     },
     "up_label": {
