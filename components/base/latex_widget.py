@@ -98,7 +98,7 @@ class LatexWidget(QtWidgets.QWidget):
         h = y1 - y0
 
         self._figure.set_size_inches(w / 80, h / 80)
-        self.setFixedSize(w, h * 0.7)
+        self.setFixedSize(w, h * 1.05)
         self._canvas.draw()
         # self._figure.show()
 
