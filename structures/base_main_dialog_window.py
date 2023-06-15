@@ -46,8 +46,15 @@ class BaseMainDialogWindow(QMainWindow):
 
         ##############################################################################
 
+        # main_window2 и main_widget2 нужны для иерархии при перемещении
+        # виджета над клавиатурой, ибо напрямую перемещать центральный виджет (мы
+        # ниже делаем self.setCentralWidget(self.main_widget2) ) -- нельзя,
+        # позиция будет обнуляться и будут страдания, проверено за 6 часов потраченного времени
+        self._main_window_base = QHBoxLayout()
+        self._main_widget_base = QWidget(self)
+
         self.main_window = QHBoxLayout()
-        self.main_widget = QWidget()
+        self.main_widget = QWidget(self._main_widget_base)
         self.main_widget.setObjectName("main_widget")
         # self.main_widget.setStyleSheet("background-color: rgb(240, 220, 255);")
         self.main_widget.setStyleSheet(
@@ -55,9 +62,9 @@ class BaseMainDialogWindow(QMainWindow):
         )
         self.main_widget.setLayout(self.main_window)
         # Устанавливаем центральный виджет Window
-        self.setCentralWidget(self.main_widget)
+        self.setCentralWidget(self._main_widget_base)
 
-        self.main_interface_layout_widget = self.main_interface_widget_class()
+        self.main_interface_layout_widget = self.main_interface_widget_class(self)
         self.milw = self.main_interface_layout_widget
         self.main_window.addWidget(self.milw)
 
