@@ -1,5 +1,5 @@
 from PyQt5 import QtCore
-from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import pyqtSignal, Qt
 from PyQt5.QtGui import QDoubleValidator
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QHBoxLayout, QLabel
 
@@ -79,6 +79,7 @@ class InfoColumnWidget(QWidget):
                 self.min_value, self.max_value, self.decimals))
 
         self.input.setText(f"{self.min_value}")
+        self.input.setInputMethodHints(Qt.ImhFormattedNumbersOnly)
 
         self.up_label = QLabel()
         self.up_label.setText(self.unit)
