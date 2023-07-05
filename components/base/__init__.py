@@ -1,4 +1,4 @@
-from .butterfly_button import ButterflyButton
+from .butterfly_button import ButterflyButton, NeedleButterflyButton
 from .log_widget import LogWidget
 from .latex_widget import LatexWidget
 from .parameter_latex_label import ParameterLatexLabel

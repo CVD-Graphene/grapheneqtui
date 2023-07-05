@@ -93,3 +93,38 @@ class ButterflyButton(QLabel):
             # self.resize(200, 100)
         except Exception as e:
             print("Show picture butterfly error", e)
+
+
+class NeedleButterflyButton(QLabel):
+    clicked = pyqtSignal()
+    update_state_signal = pyqtSignal(int)
+
+    def mousePressEvent(self, ev):
+        self.clicked.emit()
+
+    def __init__(self, state=BUTTERFLY_BUTTON_STATE.OPEN):
+        super().__init__()
+        self._state = state
+        self.update_state_signal.connect(self._update_state)
+        self.setObjectName("butterfly_button")
+
+        self._pictures = {
+            BUTTERFLY_BUTTON_STATE.INACTIVE: "grapheneqtui/assets/butterfly_button/needle_valve.png",
+            BUTTERFLY_BUTTON_STATE.OPEN: "grapheneqtui/assets/butterfly_button/needle_valve.png",
+            BUTTERFLY_BUTTON_STATE.CLOSE: "grapheneqtui/assets/butterfly_button/needle_valve.png",
+            BUTTERFLY_BUTTON_STATE.REGULATION: "grapheneqtui/assets/butterfly_button/needle_valve.png",
+        }
+        self._update_state(self._state)
+
+    def _update_state(self, state):
+        self._state = state
+        self.update_ui()
+
+    def update_ui(self):
+        try:
+            pixmap = QPixmap(self._pictures[self._state])
+            self.setPixmap(pixmap)
+            # Optional, resize window to image size
+            self.resize(pixmap.width(), pixmap.height())
+        except Exception as e:
+            print("Show picture needle butterfly error", e)
