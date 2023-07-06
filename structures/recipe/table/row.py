@@ -4,6 +4,15 @@ from .cells import (
 )
 
 
+# class QTableWidgetButton(QTableWidgetItem):
+#     def __init__(self):
+#         super().__init__(type=Qt.WindowType.)
+#         self.clicked.connect(self.on_click)
+#
+#     def on_click(self):
+#         print('Pressed table widget!!!')
+
+
 class TableRow(object):
 
     def __init__(self, table, row_id, actions_list, items=None):

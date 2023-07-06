@@ -1,5 +1,7 @@
 import os
 import string
+import time
+import uuid
 
 from random import choice
 from PyQt5 import QtCore
@@ -24,6 +26,12 @@ def create_recipe_file_name():
 
 custom_font = QFont()
 custom_font.setPointSize(18)
+
+CONTENT_COLUMN_AMOUNT = 5
+DELETE_ROW_BUTTON_COLUMN_INDEX = CONTENT_COLUMN_AMOUNT
+ADD_UP_ROW_BUTTON_COLUMN_INDEX = DELETE_ROW_BUTTON_COLUMN_INDEX + 1
+
+TOTAL_COLUMNS_AMOUNT = ADD_UP_ROW_BUTTON_COLUMN_INDEX + 1
 
 
 class RecipeTableWidget(QWidget):
@@ -72,10 +80,10 @@ class RecipeTableWidget(QWidget):
             QApplication.desktop().height() * 0.99
         ))  # Set sizes
         self.row_count = 1
-        self.rows = [TableRow(table=self, row_id=0, actions_list=self.actions_list)]
+        self.rows = [TableRow(table=self, row_id=uuid.uuid4(), actions_list=self.actions_list)]
 
         table = QTableWidget()  # Create a table
-        table.setColumnCount(5)  # Set three columns
+        table.setColumnCount(TOTAL_COLUMNS_AMOUNT)  # Set three columns
         table.setRowCount(self.row_count)  # and one row
         table.setFont(custom_font)
         # table.setWordWrap(False)  # ABOUT WORD WRAP: https://stackoverflow.com/questions/53759776/pyqt-qtablewidget-wordwrap-lines
@@ -150,7 +158,7 @@ class RecipeTableWidget(QWidget):
     def _update_table_ui(self):
         horizontalHeader = self.table.horizontalHeader()
         # resize the first column to 100 pixels
-        for i in range(4):
+        for i in range(CONTENT_COLUMN_AMOUNT - 1):
             horizontalHeader.resizeSection(i, 195)
             horizontalHeader.setFont(custom_font)
         # adjust the second column to its contents
@@ -162,7 +170,10 @@ class RecipeTableWidget(QWidget):
         # Do the resize of the columns by content
         self.table.resizeColumnsToContents()
         horizontalHeader.setSectionResizeMode(
-            4, QHeaderView.Stretch)
+            CONTENT_COLUMN_AMOUNT - 1, QHeaderView.Stretch)
+        for i in range(CONTENT_COLUMN_AMOUNT, TOTAL_COLUMNS_AMOUNT):
+            horizontalHeader.resizeSection(i, 50)
+            # horizontalHeader.setSectionResizeMode(i, QHeaderView.Stretch)
 
         for i in range(self.row_count):
             self.table.setRowHeight(i, 48)
@@ -178,7 +189,8 @@ class RecipeTableWidget(QWidget):
             self.table.setRowCount(self.row_count)
             self.rows = []
             for i, row in enumerate(data):
-                table_row = TableRow(table=self, row_id=i, items=row, actions_list=self.actions_list)
+                # table_row = TableRow(table=self, row_id=i, items=row, actions_list=self.actions_list)
+                table_row = TableRow(table=self, row_id=uuid.uuid4(), items=row, actions_list=self.actions_list)
                 self.rows.append(table_row)
             self._update_table()
             # self.rows = [TableRow(table=self, row_id=0, actions_list=self.actions_list)]
@@ -193,31 +205,75 @@ class RecipeTableWidget(QWidget):
         self.file = file
         self.path = path
 
-    def update_row(self, row_id, items):
+    def on_delete_row(self, unique_id):
+        delete_row_index = -1
+        for i, row_obj in enumerate(self.rows):
+            if row_obj.row_id == unique_id:
+                delete_row_index = i
+                break
+
+        print('Delete row', unique_id, 'with index:', delete_row_index)
+        if delete_row_index < 0:
+            return
+
+        new_rows = list(filter(lambda x: x.row_id != unique_id, self.rows))
+        self.rows = new_rows
+        self.row_count = len(self.rows)
+        # self.table.setRowCount(self.row_count)  # and one row
+        self.table.removeRow(delete_row_index)
+
+        # for i, row in enumerate(self.rows[delete_row_index:]):
+        #     self.update_row(row.row_id, row, row_index=i + delete_row_index)
+
+        self._update_table_ui()
+
+    def update_row(self, row_id, items, row_index=None):
+        if row_index is None:
+            row_index = -1
+            for row_i, row_obj in enumerate(self.rows):
+                if row_obj.row_id == row_id:
+                    row_index = row_i
+                    break
+            print('new row index:', row_index)
+            if row_index < 0:
+                return
+
         for i, item in enumerate(items):
             if item.is_item:
                 try:
-                    self.table.removeCellWidget(row_id, i)
+                    self.table.removeCellWidget(row_index, i)
                     # self.table.cellW
                 except:
                     pass
-                self.table.setItem(row_id, i, item.widget)
+                self.table.setItem(row_index, i, item.widget.clone())
             else:
-                self.table.setCellWidget(row_id, i, item.widget)
-            # table.setItem(0, 1, QTableWidgetItem("Text in column 2"))
-            # table.setItem(0, 2, QTableWidgetItem("Text in column 3"))
-            # self.table.resizeColumnsToContents()
+                self.table.setCellWidget(row_index, i, item.widget)
+
+        delete_button = QPushButton('🗑️')
+
+        def on_delete():
+            self.on_delete_row(row_id)
+
+        delete_button.clicked.connect(on_delete)
+        self.table.setCellWidget(row_index, DELETE_ROW_BUTTON_COLUMN_INDEX, delete_button)
+
+        self.table.setCellWidget(row_index, ADD_UP_ROW_BUTTON_COLUMN_INDEX, QPushButton('↑'))
 
     def _update_table(self):
+        self.row_count = len(self.rows)
+        self.table.setRowCount(self.row_count)  # and one row
+
         for i, row in enumerate(self.rows):
-            self.update_row(i, row)
+            self.update_row(row.row_id, row, row_index=i)
+
         self._update_table_ui()
         # self.table.resizeColumnsToContents()
 
     def _add_row(self):
-        self.row_count += 1
-        self.table.setRowCount(self.row_count)  # and one row
-        self.rows.append(TableRow(table=self, row_id=self.row_count - 1, actions_list=self.actions_list))
+        # self.row_count += 1
+        # self.table.setRowCount(self.row_count)  # and one row
+        # self.rows.append(TableRow(table=self, row_id=self.row_count, actions_list=self.actions_list))
+        self.rows.append(TableRow(table=self, row_id=uuid.uuid4(), actions_list=self.actions_list))
         self._update_table()
 
     def get_values(self):
@@ -225,7 +281,7 @@ class RecipeTableWidget(QWidget):
             arr = []
             for row in range(self.table.rowCount()):
                 row_arr = []
-                for col in range(self.table.columnCount()):
+                for col in range(CONTENT_COLUMN_AMOUNT):
                     it = self.table.item(row, col)
                     it2 = self.table.cellWidget(row, col)
                     if it2 is not None:
@@ -295,7 +351,7 @@ class RecipeTableWidget(QWidget):
         self.file_name_widget.setEnabled(True)
         self.hide()
 
-        self.row_count = 1
-        self.rows = [TableRow(table=self, row_id=0, items=None, actions_list=self.actions_list)]
-        self.table.setRowCount(self.row_count)  # and one row
+        # self.row_count = 1
+        self.rows = [TableRow(table=self, row_id=uuid.uuid4(), items=None, actions_list=self.actions_list)]
+        # self.table.setRowCount(self.row_count)  # and one row
         self._update_table()
