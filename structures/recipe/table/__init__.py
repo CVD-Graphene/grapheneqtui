@@ -76,9 +76,10 @@ class RecipeTableWidget(QWidget):
         self.setFont(custom_font)
 
         self.setMinimumSize(QSize(
-            QApplication.desktop().width() * 0.99,
-            QApplication.desktop().height() * 0.99
+            int(QApplication.desktop().width() * 0.99),
+            int(QApplication.desktop().height() * 0.99)
         ))  # Set sizes
+        self.setMaximumWidth(int(QApplication.desktop().width() * 0.99))
         self.row_count = 1
         self.rows = [TableRow(table=self, row_id=uuid.uuid4(), actions_list=self.actions_list)]
 
@@ -159,8 +160,9 @@ class RecipeTableWidget(QWidget):
         horizontalHeader = self.table.horizontalHeader()
         # resize the first column to 100 pixels
         for i in range(CONTENT_COLUMN_AMOUNT - 1):
-            horizontalHeader.resizeSection(i, 195)
+            horizontalHeader.resizeSection(i, 185)
             horizontalHeader.setFont(custom_font)
+            horizontalHeader.setSectionResizeMode(i, QHeaderView.ResizeMode.ResizeToContents)
         # adjust the second column to its contents
         # horizontalHeader.setSectionResizeMode(
         #     1, QHeaderView.ResizeToContents)
@@ -168,9 +170,9 @@ class RecipeTableWidget(QWidget):
         # horizontalHeader.setSectionResizeMode(
         #     4, QHeaderView.Stretch)
         # Do the resize of the columns by content
-        self.table.resizeColumnsToContents()
+        # self.table.resizeColumnsToContents()
         horizontalHeader.setSectionResizeMode(
-            CONTENT_COLUMN_AMOUNT - 1, QHeaderView.Stretch)
+            CONTENT_COLUMN_AMOUNT - 1, QHeaderView.ResizeMode.Stretch)
         for i in range(CONTENT_COLUMN_AMOUNT, TOTAL_COLUMNS_AMOUNT):
             horizontalHeader.resizeSection(i, 50)
             # horizontalHeader.setSectionResizeMode(i, QHeaderView.Stretch)
@@ -212,19 +214,38 @@ class RecipeTableWidget(QWidget):
                 delete_row_index = i
                 break
 
-        print('Delete row', unique_id, 'with index:', delete_row_index)
+        # print('Delete row', unique_id, 'with index:', delete_row_index)
         if delete_row_index < 0:
             return
 
         new_rows = list(filter(lambda x: x.row_id != unique_id, self.rows))
         self.rows = new_rows
         self.row_count = len(self.rows)
-        # self.table.setRowCount(self.row_count)  # and one row
         self.table.removeRow(delete_row_index)
 
-        # for i, row in enumerate(self.rows[delete_row_index:]):
-        #     self.update_row(row.row_id, row, row_index=i + delete_row_index)
+        self._update_table_ui()
 
+    def on_insert_row(self, unique_id):
+        insert_row_index = -1
+        for i, row_obj in enumerate(self.rows):
+            if row_obj.row_id == unique_id:
+                insert_row_index = i
+                break
+
+        # print('Insert row', unique_id, 'with index:', insert_row_index)
+        if insert_row_index < 0:
+            return
+
+        new_row = TableRow(table=self, row_id=uuid.uuid4(), actions_list=self.actions_list)
+
+        # new_rows = self.rows[:insert_row_index] + [new_row] + self.rows[insert_row_index:]
+        self.rows.insert(insert_row_index, new_row)
+        # self.rows = new_rows
+        # print('new rows:', list(map(lambda x: str(x.row_id)[:4], self.rows)))
+        self.row_count = len(self.rows)
+        self.table.insertRow(insert_row_index)
+        # self._update_table()
+        self.update_row(new_row.row_id, new_row, row_index=insert_row_index)
         self._update_table_ui()
 
     def update_row(self, row_id, items, row_index=None):
@@ -257,7 +278,14 @@ class RecipeTableWidget(QWidget):
         delete_button.clicked.connect(on_delete)
         self.table.setCellWidget(row_index, DELETE_ROW_BUTTON_COLUMN_INDEX, delete_button)
 
-        self.table.setCellWidget(row_index, ADD_UP_ROW_BUTTON_COLUMN_INDEX, QPushButton('↑'))
+        insert_row_button = QPushButton('↑')
+
+        def on_insert_row():
+            self.on_insert_row(row_id)
+
+        insert_row_button.clicked.connect(on_insert_row)
+
+        self.table.setCellWidget(row_index, ADD_UP_ROW_BUTTON_COLUMN_INDEX, insert_row_button)
 
     def _update_table(self):
         self.row_count = len(self.rows)
