@@ -48,6 +48,7 @@ class TermodatTemperatureBlock(QWidget):
         # self.speed_input.input.setText(str(settings.TERMODAT_DEFAULT_SPEED))
         self.speed_input.input.setText(str(default_speed))
         self.speed_input.input.returnPressed.connect(self._on_change_speed)
+        self.speed_input.hide()
 
         self.temperature_input = TemperatureInputLine()
         self.temperature_input.input.returnPressed.connect(self._on_change_temperature)
