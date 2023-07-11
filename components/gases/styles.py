@@ -9,7 +9,7 @@ styles = StyleSheet({
         # "max-width": "5000px",
         # "width": "100%",
         # "height": '100%',
-        # "background-color": "rgb(0, 240, 0)",
+        "background-color": "rgb(0, 240, 0)",
     },
     "gas": {
         # "width": "70px",
