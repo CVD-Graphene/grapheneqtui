@@ -66,7 +66,7 @@ class LatexWidget(QtWidgets.QWidget):
             self._update_ui()
 
     def _setText(self, mathText):
-        if self.text != mathText:
+        if self.text != mathText or True:
             self.text = mathText
             self._update_ui()
         # self.setStyleSheet(styles.container)
