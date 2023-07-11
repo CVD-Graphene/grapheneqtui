@@ -85,7 +85,7 @@ class LatexWidget(QtWidgets.QWidget):
         text = self._figure.suptitle(
             self.text,
             x=0.0,
-            y=self.top_y,
+            # y=0, # self.top_y,
             horizontalalignment='left',
             verticalalignment='top',
             size=QtGui.QFont().pointSize() * self.fon_size_mult,
@@ -98,7 +98,7 @@ class LatexWidget(QtWidgets.QWidget):
         h = y1 - y0
 
         self._figure.set_size_inches(w / 80, h / 80)
-        self.setFixedSize(w, h * 1.05)
+        self.setFixedSize(w, h)
         self._canvas.draw()
         # self._figure.show()
 
