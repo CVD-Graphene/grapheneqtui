@@ -84,7 +84,7 @@ class LatexWidget(QtWidgets.QWidget):
     def _update_ui(self):
         text = self._figure.suptitle(
             self.text,
-            x=0.09,
+            x=0.0,
             y=self.top_y,
             horizontalalignment='left',
             verticalalignment='top',
