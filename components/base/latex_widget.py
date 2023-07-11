@@ -56,30 +56,19 @@ class LatexWidget(QtWidgets.QWidget):
         self._canvas = FigureCanvas(self._figure)
         # self._canvas.siz
         l.addWidget(self._canvas)
-        self._update_ui()
-
         self.update_text_color_signal.connect(self._update_text_color)
 
+        self._update_ui()
+
     def _update_text_color(self, text_color):
-        if text_color != self.text_color or True:
-            self.text_color = text_color
-            self._update_ui()
+        # if text_color != self.text_color or True:
+        self.text_color = text_color
+        self._update_ui()
 
     def _setText(self, mathText):
-        if self.text != mathText or True:
-            self.text = mathText
-            self._update_ui()
-        # self.setStyleSheet(styles.container)
-        # l = QVBoxLayout(self)
-        # l.setContentsMargins(0, 0, 0, 0)
-
-        # r, g, b, a = self.palette().base().color().getRgbF()
-        # facecolor = (self.rgb[0]/255, self.rgb[1]/255, self.rgb[2]/255)
-        # self._figure = Figure(edgecolor=(r, g, b), facecolor=facecolor)
-        # self._canvas = FigureCanvas(self._figure)
-        # # self._canvas.siz
-        # l.addWidget(self._canvas)
-        # self._figure.clear()
+        # if self.text != mathText or True:
+        self.text = mathText
+        self._update_ui()
 
     def _update_ui(self):
         text = self._figure.suptitle(
