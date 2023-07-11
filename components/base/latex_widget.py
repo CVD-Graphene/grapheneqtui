@@ -61,7 +61,7 @@ class LatexWidget(QtWidgets.QWidget):
         self.update_text_color_signal.connect(self._update_text_color)
 
     def _update_text_color(self, text_color):
-        if text_color != self.text_color:
+        if text_color != self.text_color or True:
             self.text_color = text_color
             self._update_ui()
 

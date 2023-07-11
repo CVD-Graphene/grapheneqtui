@@ -82,6 +82,7 @@ class GasStateWidget(QWidget):
 
         self.tmp_timer = QTimer(parent=None)
         self.tmp_timer.singleShot(100, self._draw_gas_name_color)
+        self.tmp_timer.singleShot(1000, self._draw_gas_name_color)
 
     def _draw_gas_name_color(self, pressure=0.0):
         if pressure < 1.5:
