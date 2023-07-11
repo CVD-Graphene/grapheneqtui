@@ -1,5 +1,7 @@
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QPushButton, QWidget, QGridLayout, QVBoxLayout
+
+from ..components import ControllersWorkingStatusWidget
 from ..constants import LIGHT_GREEN
 from ..utils import StyleSheet
 
@@ -82,6 +84,8 @@ class RightButtonsWidget(QWidget):
         self.button_close.clicked.connect(on_close)
         self.button_close.setStyleSheet(styles.close_button)
 
+        self.system_status_widget = ControllersWorkingStatusWidget()
+
         self.button_settings = QPushButton("SETTINGS")
         self.button_settings.setObjectName("settings_button")
         self.button_settings.setStyleSheet(styles.settings_button)
@@ -100,15 +104,16 @@ class RightButtonsWidget(QWidget):
         self.edit_recipe.clicked.connect(on_create_recipe)
         self.edit_recipe.setStyleSheet(styles.edit_recipe_button)
 
-        self.layout.addWidget(self.button_close, 0, 0, QtCore.Qt.AlignTop)
+        self.layout.addWidget(self.button_close, 0, 0, alignment=QtCore.Qt.AlignTop)
+        self.layout.addWidget(self.system_status_widget, 1, 0,
+                              # alignment=QtCore.Qt.AlignTop
+                              )
         # self.right_buttons_layout.setRowMinimumHeight(0, 10)
         # self.right_buttons_layout.setRowStretch(0, 10)
 
-        self.layout.addWidget(self.button_settings, 1, 0, QtCore.Qt.AlignTop)
+        self.layout.addWidget(self.button_settings, 2, 0, QtCore.Qt.AlignTop)
         self.layout.setRowMinimumHeight(1, 100)
         # self.right_buttons_layout.setRowStretch(1, 1)
-
-        self.manage_recipe_layout = QVBoxLayout()
 
         self.pause_recipe = QPushButton("▋▋/▶")
         self.is_pause = False
@@ -123,11 +128,11 @@ class RightButtonsWidget(QWidget):
             self.stop_recipe.clicked.connect(on_stop_recipe)
         self.stop_recipe.setStyleSheet(styles.stop_recipe_button)
 
-        self.layout.addWidget(self.select_recipe, 2, 0)
-        self.layout.addWidget(self.edit_recipe, 3, 0)
+        self.layout.addWidget(self.select_recipe, 3, 0)
+        self.layout.addWidget(self.edit_recipe, 4, 0)
 
-        self.layout.addWidget(self.pause_recipe, 4, 0)
-        self.layout.addWidget(self.stop_recipe, 5, 0)
+        self.layout.addWidget(self.pause_recipe, 5, 0)
+        self.layout.addWidget(self.stop_recipe, 6, 0)
 
         self.stop_recipe.hide()
         self.pause_recipe.hide()
