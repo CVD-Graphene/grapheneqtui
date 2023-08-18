@@ -270,11 +270,6 @@ class RecipeTableWidget(QWidget):
             else:
                 self.table.setCellWidget(row_index, i, item.widget)
 
-        # trash_pixmap = QPixmap("grapheneqtui/assets/other/trash.png")
-        # QIcon
-        # ButtonIcon(pixmap);
-        # button->setIcon(ButtonIcon);
-        # button->setIconSize(pixmap.rect().size());
         # delete_button = QPushButton('🗑️')
         delete_button = QPushButton('')
         delete_button.setIcon(QIcon("grapheneqtui/assets/other/trash.png"))
