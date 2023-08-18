@@ -1,3 +1,4 @@
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QTableWidgetItem, QLineEdit, QDoubleSpinBox, QSpinBox
 
 
@@ -24,6 +25,7 @@ class AppQTimeEdit(QLineEdit):
     def __init__(self, parent=None, text="0:00"):
         super().__init__(parent=parent)
         self.setInputMask(f"{'0' * TIME_MINUTES_DIGITS_MAX}:{'0' * TIME_SECONDS_DIGITS_MAX}")
+        self.setInputMethodHints(Qt.ImhFormattedNumbersOnly)
         self.setText(text)
         # self.textChanged.connect(self._on_change)
 
