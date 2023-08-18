@@ -5,7 +5,7 @@ import uuid
 
 from random import choice
 from PyQt5 import QtCore
-from PyQt5.QtGui import QFont
+from PyQt5.QtGui import QFont, QPixmap, QIcon
 from PyQt5.QtWidgets import QApplication, QGridLayout, QWidget, QFileDialog, \
     QTableWidget, QLineEdit, QPushButton, QHBoxLayout, QHeaderView
 from PyQt5.QtCore import QSize
@@ -270,7 +270,15 @@ class RecipeTableWidget(QWidget):
             else:
                 self.table.setCellWidget(row_index, i, item.widget)
 
-        delete_button = QPushButton('🗑️')
+        # trash_pixmap = QPixmap("grapheneqtui/assets/other/trash.png")
+        # QIcon
+        # ButtonIcon(pixmap);
+        # button->setIcon(ButtonIcon);
+        # button->setIconSize(pixmap.rect().size());
+        # delete_button = QPushButton('🗑️')
+        delete_button = QPushButton('')
+        delete_button.setIcon(QIcon("grapheneqtui/assets/other/trash.png"))
+        delete_button.setIconSize(QSize(32, 32))
 
         def on_delete():
             self.on_delete_row(row_id)
