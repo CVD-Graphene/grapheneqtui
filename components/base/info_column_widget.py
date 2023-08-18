@@ -27,7 +27,7 @@ styles = StyleSheet({
     },
     "down_label": {
         "max-height": "60px",
-        "min-width": "180px",
+        "min-width": "220px",
         # "width": "120px",
         "background-color": "rgb(180, 180, 180)",
         "font-size": "28px",
