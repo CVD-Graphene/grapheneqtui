@@ -29,5 +29,6 @@ class ShowTemperatureBlock(ParameterLatexLabel):
         self._set_value(0.0)
 
     def _set_value(self, value):
-        value = str(round(value, 1))
+        # value = str(round(value, 0))
+        value = str(int(value))
         self.setText(f"T = ${value}$ °C")
