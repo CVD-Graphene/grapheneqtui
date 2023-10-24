@@ -15,13 +15,20 @@ styles = StyleSheet({
     #     # "height": '100%',
     #     # "background-color": "rgb(0, 240, 0)",
     # },
+    "all_xcdr23f": {
+        "border-style": "solid",
+        "border-color": "black",
+        "border-width": "1px",
+        "background-color": "rgba(220, 220, 220, 0)",
+    },
     "up_label": {
         "max-height": "60px",
         "width": '100%',
+        "border-left": "none",
         # "margin-left": "10px",
         # "min-width": "180px",
         # "width": "120px",
-        "background-color": "rgba(255, 255, 0, 0)",
+        # "background-color": "rgba(255, 255, 0, 0)",
         # "background-color": "rgb(255, 255, 255)",
         "font-size": "28px",
     },
@@ -37,9 +44,10 @@ styles = StyleSheet({
         # "height:": "100%",
         "max-height": "60px",
         # "min-width": "50px",
-        "background-color": "rgba(210, 210, 210, 0)",
+        # "background-color": "rgba(210, 210, 210, 0)",
         # "border-color": "rgba(210, 210, 210, 0)",
-        "border": "none",
+        # "border": "none",
+        "border-right": "none",
         # "background-color": LIGHT_GREEN,
         # "width": "90%",
         # "max-width": "100px",
@@ -67,16 +75,17 @@ class InfoColumnWidget(QWidget):
         self.layout = QVBoxLayout()
         self.setLayout(self.layout)
         # self.layout.setContentsMargins(0, 0, 0, 0)
-        # self.setStyleSheet(styles.container)
+        self.setStyleSheet(styles.all_xcdr23f)
         # self.setObjectName("gas_state_widget")
         # self.setAttribute(QtCore.Qt.WA_StyledBackground, True)
 
         self.input = QLineEdit()
         self.input.setStyleSheet(styles.input)
         # self.input.setMinimumWidth(1000)
-        if self.max_value:
-            self.input.setValidator(QDoubleValidator(
-                self.min_value, self.max_value, self.decimals))
+
+        # if self.max_value:
+        #     self.input.setValidator(QDoubleValidator(
+        #         self.min_value, self.max_value, self.decimals))
 
         self.input.setText(f"{self.min_value}")
         self.input.setInputMethodHints(Qt.ImhFormattedNumbersOnly)
@@ -125,6 +134,7 @@ class InfoColumnWidget(QWidget):
 
     def _on_update_input_value(self):
         input_value = self.input.text().replace(',', '.')
-        value = float(input_value)
-        # print("! INPUT TARGET VALUE:", value)
+        value = max(self.min_value, min(self.max_value, float(input_value)))
+        self._update_target_value_label(value)
+        print("! INPUT TARGET VALUE:", value)
         self.on_update_target_signal.emit(value)
