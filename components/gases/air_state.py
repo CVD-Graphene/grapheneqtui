@@ -22,14 +22,12 @@ class AirStateWidget(QWidget):
         self.line = QWidget(self)
         self.line.setStyleSheet(styles.line)
         self.line.setFixedWidth(self.width() - 120)
-        # print("HEIGHT!!!", self.height() // 2) # 240 = h/2 ????
-        self.line.move(120, 60)  # -self.height() // 2
-        # self.layout.addWidget(self.line, QtCore.Qt.AlignAbsolute)
+        self.line.move(120, 80)  # -self.height() // 2
 
         self.layout = QHBoxLayout()
         self.setLayout(self.layout)
-        self.setStyleSheet(styles.container)
-        self.setObjectName("gas_state_widget")
+        self.setStyleSheet(styles.air_container)
+        self.setObjectName("air_state_widget")
         self.setAttribute(QtCore.Qt.WA_StyledBackground, True)
 
         self.gas = QLabel()

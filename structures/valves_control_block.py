@@ -39,10 +39,11 @@ class BaseValvesControlBlock(QWidget):
         self.setAttribute(QtCore.Qt.WA_StyledBackground, True)
 
         self.set_control_valves()
-        self.set_air_valve()
 
         self.gases = []
         self.set_gases_valves()
+
+        self.set_air_valve()
 
     def set_control_valves(self):
         pass

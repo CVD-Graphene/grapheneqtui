@@ -11,6 +11,16 @@ styles = StyleSheet({
         # "height": '100%',
         # "background-color": "rgb(0, 240, 0)",
     },
+    "air_container": {
+        "name": "QWidget#air_state_widget",
+        "max-height": "120px",
+        "margin-top": "40px",
+        "border-top": "2px solid grey",
+        # "max-width": "5000px",
+        # "width": "100%",
+        # "height": '100%',
+        # "background-color": "rgb(0, 240, 0)",
+    },
     "gas": {
         # "width": "70px",
         # "width": "100%",
