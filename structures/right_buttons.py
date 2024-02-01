@@ -70,6 +70,8 @@ class RightButtonsWidget(QWidget):
         self.on_pause_recipe = on_pause_recipe
         self.on_get_recipe_state = on_get_recipe_state
 
+        self._on_open_recipe = on_open_recipe
+
         self.recipe_states = recipe_states
         assert self.recipe_states is not None
 
@@ -92,7 +94,7 @@ class RightButtonsWidget(QWidget):
 
         self.select_recipe = QPushButton("Select and\nrun recipe")
         self.select_recipe.setObjectName("run_recipe_button")
-        self.select_recipe.clicked.connect(on_open_recipe)
+        self.select_recipe.clicked.connect(self.on_open_recipe)
         self.select_recipe.setStyleSheet(styles.run_recipe_button)
 
         # self.select_recipe = QPushButton("Create\nrecipe")
@@ -136,6 +138,9 @@ class RightButtonsWidget(QWidget):
 
         self.stop_recipe.hide()
         self.pause_recipe.hide()
+
+    def on_open_recipe(self):
+        self._on_open_recipe()
 
     def _update_pause_button(self):
         # pass

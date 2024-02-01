@@ -146,12 +146,16 @@ class BaseMainDialogWindow(QMainWindow):
         except Exception as e:
             print("On create recipe function error:", e)
 
+    def on_choose_recipe_file(self, file_path):
+        data = self.system.get_recipe_file_data(file_path)
+        self.table_widget.on_open_recipe_file(file_path, data)
+
     def on_open_recipe(self):
         try:
             file_path = QFileDialog.getOpenFileName(self, 'Выбрать рецепт', '')[0]
+            print("file_path", file_path)
             if file_path:
-                data = self.system.get_recipe_file_data(file_path)
-                self.table_widget.on_open_recipe_file(file_path, data)
+                self.on_choose_recipe_file(file_path)
         except Exception as e:
             print("On open recipe error:", e)
 
