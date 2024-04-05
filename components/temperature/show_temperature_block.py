@@ -23,12 +23,14 @@ styles = StyleSheet({
 class ShowTemperatureBlock(ParameterLatexLabel):
     update_temperature_signal = pyqtSignal(float)
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, digits_round=0):
         super().__init__(parent=parent)
+        self.digits_round = digits_round
+
         self.update_temperature_signal.connect(self._set_value)
         self._set_value(0.0)
 
     def _set_value(self, value):
         # value = str(round(value, 0))
-        value = str(int(value))
+        value = str(round(value, self.digits_round))
         self.setText(f"T = ${value}$ °C")

@@ -23,10 +23,11 @@ styles = StyleSheet({
 class ShowPressureBlock(ParameterLatexLabel):
     update_pressure_signal = pyqtSignal(float)
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, digits_round=0):
         super().__init__(parent=parent)
         self.update_pressure_signal.connect(self._set_value)
         self._set_value(0.0)
+        self.digits_round = digits_round
 
         # shadow = QGraphicsDropShadowEffect()
         # # setting blur radius
@@ -45,6 +46,6 @@ class ShowPressureBlock(ParameterLatexLabel):
             num, degree = s.split('e')
             formatted_value = f"{num}*10^{{{int(degree)}}}"
         else:
-            formatted_value = f"{int(self.value)}"
+            formatted_value = f"{round(self.value, self.digits_round)}"
 
         self.setText(f"P = ${formatted_value}$ mbar")
