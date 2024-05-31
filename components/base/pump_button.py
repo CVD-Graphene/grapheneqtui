@@ -23,6 +23,7 @@ class PumpButton(QLabel):
             PUMP_BUTTON_STATE.INACTIVE: "grapheneqtui/assets/pump_button/gray_pump.png",
             PUMP_BUTTON_STATE.OPEN: "grapheneqtui/assets/pump_button/green_pump.png",
             PUMP_BUTTON_STATE.CLOSE: "grapheneqtui/assets/pump_button/red_pump.png",
+            PUMP_BUTTON_STATE.REGULATION: "grapheneqtui/assets/pump_button/gray_pump.png",
         }
         self._update_state(self._state)
 
