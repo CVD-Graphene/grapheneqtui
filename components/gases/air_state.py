@@ -56,8 +56,8 @@ class AirStateWidget(QWidget):
 
     def _on_click_butterfly(self):
         if self.is_waiting or self.state == BUTTERFLY_BUTTON_STATE.OPEN:
-            self.is_waiting = False
             self.update_is_valve_open_signal.emit()
+            self.is_waiting = False
         else:
             self.is_waiting = True
             self.b.update_state_signal.emit(BUTTERFLY_BUTTON_STATE.REGULATION)
