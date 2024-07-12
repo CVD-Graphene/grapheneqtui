@@ -67,8 +67,9 @@ class AirStateWidget(QWidget):
             )
 
     def _clear_button_waiting(self):
-        if not self.is_waiting:
+        if self.state == BUTTERFLY_BUTTON_STATE.OPEN:
             return
+        self.is_waiting = False
         self._draw_is_open(False)
 
     # def draw_is_open(self, is_open):
